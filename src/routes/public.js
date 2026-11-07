@@ -201,8 +201,8 @@ router.get('/:slug/qr.png', async (req, res) => {
   }
 });
 
-// 2-Way Lead Exchange ("Connect with me" submission)
-router.post('/:slug/exchange', async (req, res) => {
+// 2-Way Lead Exchange ("Connect with me" submission - supports /connect and /exchange)
+const handleLeadSubmission = async (req, res) => {
   try {
     const slug = req.params.slug.toLowerCase().trim();
     const staff = await db.getStaffBySlug(slug);
@@ -230,7 +230,10 @@ router.post('/:slug/exchange', async (req, res) => {
     console.error('Error recording lead:', err);
     return res.status(500).json({ error: 'Failed to record contact details.' });
   }
-});
+};
+
+router.post('/:slug/exchange', handleLeadSubmission);
+router.post('/:slug/connect', handleLeadSubmission);
 
 module.exports = router;
 

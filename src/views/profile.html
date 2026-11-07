@@ -915,7 +915,7 @@
         </h3>
         <button class="close-btn" onclick="closeModal('exchange-modal')">&times;</button>
       </div>
-      <form id="lead-form" onsubmit="handleLeadSubmit(event)">
+      <form id="lead-form" onsubmit="handleLeadSubmit(event); return false;">
         <div class="form-group">
           <label for="lead-name">Your Full Name</label>
           <input type="text" id="lead-name" class="form-input" placeholder="e.g. Kwame Mensah" required />
@@ -1006,6 +1006,12 @@
       const cardBack = document.getElementById('card-back');
       if (cardBack) {
         cardBack.addEventListener('click', flipCard);
+      }
+
+      // Attach lead form listener
+      const leadForm = document.getElementById('lead-form');
+      if (leadForm) {
+        leadForm.addEventListener('submit', handleLeadSubmit);
       }
 
       // Render Contact Links
@@ -1158,41 +1164,74 @@
     }
 
     async function handleLeadSubmit(e) {
-      e.preventDefault();
+      if (e) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+      }
       const submitBtn = document.getElementById("lead-submit-btn");
-      submitBtn.disabled = true;
-      submitBtn.textContent = "Transmitting...";
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Transmitting...";
+      }
+
+      const nameInput = document.getElementById("lead-name");
+      const contactInput = document.getElementById("lead-contact");
+      const noteInput = document.getElementById("lead-note");
+
+      const visitor_name = (nameInput ? nameInput.value : "").trim();
+      const visitor_contact = (contactInput ? contactInput.value : "").trim();
+      const visitor_note = (noteInput ? noteInput.value : "").trim();
+
+      if (!visitor_name || !visitor_contact) {
+        alert("Please provide both your name and phone/email.");
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Send Details Back";
+        }
+        return false;
+      }
 
       const urlParams = new URLSearchParams(window.location.search);
       const source = urlParams.get("src") || "direct";
 
       const payload = {
-        visitor_name: document.getElementById("lead-name").value,
-        visitor_contact: document.getElementById("lead-contact").value,
-        visitor_note: document.getElementById("lead-note").value,
+        visitor_name,
+        visitor_contact,
+        visitor_note,
         source
       };
 
       try {
-        const res = await fetch(`/p/${slug}/exchange`, {
+        const targetSlug = slug || 'bernard-anim';
+        const res = await fetch(`/p/${targetSlug}/connect`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
           body: JSON.stringify(payload)
         });
-        const data = await res.json();
-        if (data.success) {
-          alert(`Thank you, ${payload.visitor_name}! Your details were received by Ghana Co-operative Credit Unions Association.`);
-          document.getElementById("lead-form").reset();
+
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok && data.success) {
+          alert(`Thank you, ${visitor_name}! Your contact details were received by Ghana Co-operative Credit Unions Association.`);
+          const form = document.getElementById("lead-form");
+          if (form) form.reset();
           closeModal("exchange-modal");
         } else {
           alert(data.error || "Failed to submit. Please try again.");
         }
       } catch (err) {
-        alert("Network error submitting details.");
+        console.error("Lead submission error:", err);
+        alert("Could not submit details: " + (err && err.message ? err.message : "Network error"));
       } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = "Send Details Back";
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = "Send Details Back";
+        }
       }
+      return false;
     }
   </script>
 </body>
