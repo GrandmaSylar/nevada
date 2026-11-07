@@ -56,6 +56,12 @@ router.get('/:slug', async (req, res) => {
       address: '44 Jones Nelson Street, Adabraka, Accra, Ghana'
     };
 
+    // Client-side JSON payload (use avatar endpoint instead of inlining massive base64)
+    const staffDataForJson = {
+      ...staffData,
+      avatar_path: staff.avatar_path ? `/p/${staffData.slug}/avatar` : null
+    };
+
     template = template
       .replace(/{{SLUG}}/g, staffData.slug)
       .replace(/{{FIRST_NAME}}/g, staffData.first_name || '')
@@ -73,16 +79,63 @@ router.get('/:slug', async (req, res) => {
       .replace(/{{LOCATION_URL}}/g, staffData.location_url)
       .replace(/{{ADDRESS}}/g, staffData.address)
       .replace(/{{BIO}}/g, staffData.bio || '')
-      .replace(/{{AVATAR_PATH}}/g, staffData.avatar_path || '')
+      .replace(/{{AVATAR_PATH}}/g, staffDataForJson.avatar_path || '')
       .replace(/{{INITIALS}}/g, initials)
       .replace(/{{BASE_URL}}/g, baseUrl)
-      .replace(/{{DATA_JSON}}/g, JSON.stringify(staffData).replace(/"/g, '&quot;'));
+      .replace(/{{DATA_JSON}}/g, JSON.stringify(staffDataForJson).replace(/"/g, '&quot;'));
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.send(template);
   } catch (err) {
     console.error('Error rendering profile:', err);
     return res.status(500).send('Error loading card profile.');
+  }
+});
+
+// Serve avatar directly from MSSQL / DB store with fast caching
+router.get('/:slug/avatar', async (req, res) => {
+  try {
+    const slug = req.params.slug.toLowerCase().trim();
+    const staff = await db.getStaffBySlug(slug);
+
+    if (!staff || !staff.avatar_path) {
+      return res.status(404).send('Avatar not found.');
+    }
+
+    const avatar = staff.avatar_path.trim();
+
+    // 1. Data URI (Base64) stored directly in database
+    if (avatar.startsWith('data:')) {
+      const match = avatar.match(/^data:([^;]+);base64,(.+)$/);
+      if (match) {
+        const mimeType = match[1];
+        const buffer = Buffer.from(match[2], 'base64');
+        res.setHeader('Content-Type', mimeType);
+        res.setHeader('Content-Length', buffer.length);
+        res.setHeader('Cache-Control', 'public, max-age=86400, stale-while-revalidate=604800');
+        return res.send(buffer);
+      }
+    }
+
+    // 2. Static disk file (local development fallback)
+    if (avatar.startsWith('/uploads/') || avatar.startsWith('uploads/')) {
+      const cleanPath = avatar.replace(/^\//, '');
+      const localFile = path.join(__dirname, '..', '..', 'public', cleanPath);
+      if (fs.existsSync(localFile)) {
+        res.setHeader('Cache-Control', 'public, max-age=86400');
+        return res.sendFile(localFile);
+      }
+    }
+
+    // 3. External HTTP URL
+    if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+      return res.redirect(avatar);
+    }
+
+    return res.status(404).send('Avatar not found.');
+  } catch (err) {
+    console.error('Error serving avatar:', err);
+    return res.status(500).send('Error serving avatar image.');
   }
 });
 

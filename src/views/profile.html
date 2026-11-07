@@ -173,8 +173,10 @@
     .card-flipper {
       width: 100%;
       position: relative;
-      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+      transition: transform 0.65s cubic-bezier(0.4, 0.0, 0.2, 1);
       transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
+      will-change: transform;
       border-radius: 20px;
     }
 
@@ -185,6 +187,7 @@
     /* Common Card Face Properties */
     .card-face {
       width: 100%;
+      min-height: 310px;
       border-radius: 20px;
       background: var(--card-face-bg);
       border: 1px solid var(--card-face-border);
@@ -194,6 +197,11 @@
       -webkit-backface-visibility: hidden;
       position: relative;
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transform-style: preserve-3d;
+      -webkit-transform-style: preserve-3d;
     }
 
     /* Subtle fine-paper background dot pattern */
@@ -205,13 +213,14 @@
       background-image: var(--card-texture);
       opacity: 0.04;
       pointer-events: none;
+      border-radius: 20px;
     }
 
     /* FRONT FACE: The Physical Business Card */
     .card-front {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      transform: rotateY(0deg);
+      gap: 14px;
+      z-index: 2;
     }
 
     .card-front-top {
@@ -442,6 +451,7 @@
       flex-direction: column;
       justify-content: space-between;
       text-align: center;
+      z-index: 1;
     }
 
     .mag-stripe {
@@ -734,7 +744,16 @@
 
           <!-- Person Profile Details on Card -->
           <div class="card-person-row">
-            <div class="card-avatar-box" id="avatar-container"></div>
+            <div class="card-avatar-box" id="avatar-container">
+              <img 
+                src="/p/{{SLUG}}/avatar" 
+                alt="{{FULL_NAME}}" 
+                class="avatar-photo"
+                id="avatar-img"
+                onerror="this.style.display='none'; document.getElementById('avatar-fallback').style.display='flex';" 
+              />
+              <div class="card-avatar-initials" id="avatar-fallback" style="display: none;">{{INITIALS}}</div>
+            </div>
             <div class="card-person-text">
               <div class="card-person-name">{{FULL_NAME}}</div>
               <div class="card-person-title">{{JOB_TITLE}}</div>
@@ -807,8 +826,8 @@
 
     <!-- Flip Card Button -->
     <div class="card-actions-bar">
-      <button class="btn-flip-card" onclick="flipCard()">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <button class="btn-flip-card" id="flip-card-btn" onclick="flipCard()" type="button" aria-label="Flip Digital Card">
+        <svg id="flip-btn-icon" style="transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); width: 15px; height: 15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </svg>
         <span id="flip-btn-text">Flip to Card Back (QR Code)</span>
@@ -907,13 +926,16 @@
     function flipCard() {
       const flipper = document.getElementById('card-flipper');
       const text = document.getElementById('flip-btn-text');
+      const icon = document.getElementById('flip-btn-icon');
       isFlipped = !isFlipped;
       if (isFlipped) {
         flipper.classList.add('is-flipped');
         text.textContent = 'Flip to Card Front';
+        if (icon) icon.style.transform = 'rotate(180deg)';
       } else {
         flipper.classList.remove('is-flipped');
         text.textContent = 'Flip to Card Back (QR Code)';
+        if (icon) icon.style.transform = 'rotate(0deg)';
       }
     }
 
@@ -941,15 +963,6 @@
     document.addEventListener("DOMContentLoaded", () => {
       const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
       updateThemeIcons(currentTheme);
-
-      // Render Avatar
-      const avatarBox = document.getElementById("avatar-container");
-      if (staff.avatar_path) {
-        avatarBox.innerHTML = `<img src="${staff.avatar_path}" alt="${staff.first_name} ${staff.last_name}" />`;
-      } else {
-        const initials = ((staff.first_name || '')[0] || '') + ((staff.last_name || '')[0] || '');
-        avatarBox.innerHTML = `<div class="card-avatar-initials">${initials.toUpperCase() || 'CU'}</div>`;
-      }
 
       // Render Contact Links
       const linksContainer = document.getElementById("links-container");

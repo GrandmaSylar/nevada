@@ -176,6 +176,41 @@ async function initDb() {
         console.log(`Default admin created in MSSQL: ${defaultAdminEmail} (password: ${defaultAdminPass})`);
       }
 
+      // Seed default staff if table is empty
+      const staffCheck = await activePool.request().query('SELECT COUNT(*) as cnt FROM staff');
+      if (staffCheck.recordset[0].cnt === 0) {
+        const seedStaff = require('./seedStaff');
+        await activePool.request()
+          .input('id', sql.NVarChar, seedStaff.id)
+          .input('slug', sql.NVarChar, seedStaff.slug)
+          .input('first_name', sql.NVarChar, seedStaff.first_name)
+          .input('last_name', sql.NVarChar, seedStaff.last_name)
+          .input('job_title', sql.NVarChar, seedStaff.job_title)
+          .input('department', sql.NVarChar, seedStaff.department)
+          .input('company', sql.NVarChar, seedStaff.company)
+          .input('phone', sql.NVarChar, seedStaff.phone)
+          .input('email', sql.NVarChar, seedStaff.email)
+          .input('whatsapp', sql.NVarChar, seedStaff.whatsapp)
+          .input('linkedin_url', sql.NVarChar, seedStaff.linkedin_url)
+          .input('github_url', sql.NVarChar, seedStaff.github_url)
+          .input('website_url', sql.NVarChar, seedStaff.website_url)
+          .input('bio', sql.NVarChar, seedStaff.bio)
+          .input('avatar_path', sql.NVarChar, seedStaff.avatar_path)
+          .input('is_active', sql.Bit, seedStaff.is_active ? 1 : 0)
+          .query(`
+            INSERT INTO staff (
+              id, slug, first_name, last_name, job_title, department, company,
+              phone, email, whatsapp, linkedin_url, github_url, website_url,
+              bio, avatar_path, is_active
+            ) VALUES (
+              @id, @slug, @first_name, @last_name, @job_title, @department, @company,
+              @phone, @email, @whatsapp, @linkedin_url, @github_url, @website_url,
+              @bio, @avatar_path, @is_active
+            )
+          `);
+        console.log(`Default staff seeded in MSSQL: ${seedStaff.first_name} ${seedStaff.last_name} (${seedStaff.slug})`);
+      }
+
       dbInitialized = true;
       return;
     } catch (err) {
@@ -197,26 +232,8 @@ async function initDb() {
   }
 
   if (!localStore.staff || localStore.staff.length === 0) {
-    localStore.staff = [{
-      id: 'staff-sample',
-      slug: 'john-doe',
-      first_name: 'John',
-      last_name: 'Doe',
-      job_title: 'Head of Engineering',
-      department: 'Technology',
-      company: 'Nevada Systems',
-      phone: '+1 555-019-2834',
-      email: 'john.doe@example.com',
-      whatsapp: '+15550192834',
-      linkedin_url: 'https://linkedin.com/in/example',
-      github_url: 'https://github.com/GrandmaSylar',
-      website_url: 'https://example.com',
-      bio: 'Building next-gen digital infrastructure and contactless connected hardware.',
-      avatar_path: null,
-      is_active: true,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    }];
+    const seedStaff = require('./seedStaff');
+    localStore.staff = [seedStaff];
     saveLocalStore();
   }
 
