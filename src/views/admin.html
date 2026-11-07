@@ -48,9 +48,8 @@
 
     [data-theme="dark"] {
       --bg: #071527;
-      --bg-gradient: radial-gradient(at 0% 0%, rgba(1, 54, 107, 0.5) 0px, transparent 55%),
-                     radial-gradient(at 100% 100%, rgba(201, 75, 67, 0.18) 0px, transparent 50%);
-      --header-bg: rgba(13, 34, 63, 0.85);
+      --bg-gradient: none;
+      --header-bg: #0d223f;
       --panel-bg: #0d223f;
       --panel-border: rgba(255, 255, 255, 0.1);
       --panel-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
@@ -362,15 +361,6 @@
       text-align: center;
       position: relative;
       overflow: hidden;
-    }
-    #login-view::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, var(--cua-red), var(--cua-navy-light));
     }
     .login-logo-box {
       margin-bottom: 20px;
