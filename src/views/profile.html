@@ -195,13 +195,11 @@
       padding: 22px 20px;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      position: relative;
-      overflow: hidden;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transform-style: preserve-3d;
-      -webkit-transform-style: preserve-3d;
+      overflow: hidden;
+      transition: opacity 0.25s ease 0.1s;
     }
 
     /* Subtle fine-paper background dot pattern */
@@ -218,10 +216,13 @@
 
     /* FRONT FACE: The Physical Business Card */
     .card-front {
+      position: relative;
       transform: rotateY(0deg);
+      -webkit-transform: rotateY(0deg);
       gap: 14px;
       z-index: 2;
       pointer-events: auto;
+      opacity: 1;
     }
 
     .card-front-top {
@@ -448,6 +449,7 @@
       position: absolute;
       inset: 0;
       transform: rotateY(180deg);
+      -webkit-transform: rotateY(180deg);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -455,16 +457,19 @@
       z-index: 1;
       pointer-events: none;
       cursor: pointer;
+      opacity: 0;
     }
 
     .card-flipper.is-flipped .card-front {
       z-index: 1;
       pointer-events: none;
+      opacity: 0;
     }
 
     .card-flipper.is-flipped .card-back {
       z-index: 2;
       pointer-events: auto;
+      opacity: 1;
     }
 
     .mag-stripe {
@@ -816,7 +821,7 @@
         </div>
 
         <!-- BACK SIDE: Magnetic Stripe & Camera QR Fallback -->
-        <div class="card-face card-back" onclick="flipCard()" title="Tap to flip to card front">
+        <div class="card-face card-back" id="card-back" title="Tap to flip to card front">
           <div class="mag-stripe"></div>
           
           <div class="qr-card-container">
@@ -839,7 +844,7 @@
 
     <!-- Flip Card Button -->
     <div class="card-actions-bar">
-      <button class="btn-flip-card" id="flip-card-btn" onclick="flipCard()" type="button" aria-label="Flip Digital Card">
+      <button class="btn-flip-card" id="flip-card-btn" type="button" aria-label="Flip Digital Card">
         <svg id="flip-btn-icon" style="transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); width: 15px; height: 15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
         </svg>
@@ -945,7 +950,11 @@
 
     // 3D Card Flip Animation Logic
     let isFlipped = false;
-    function flipCard() {
+    function flipCard(e) {
+      if (e) {
+        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) e.stopPropagation();
+      }
       const flipper = document.getElementById('card-flipper');
       const text = document.getElementById('flip-btn-text');
       const icon = document.getElementById('flip-btn-icon');
@@ -989,10 +998,14 @@
       const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
       updateThemeIcons(currentTheme);
 
-      // Attach flip button listener
+      // Attach flip listeners
       const flipBtn = document.getElementById('flip-card-btn');
       if (flipBtn) {
         flipBtn.addEventListener('click', flipCard);
+      }
+      const cardBack = document.getElementById('card-back');
+      if (cardBack) {
+        cardBack.addEventListener('click', flipCard);
       }
 
       // Render Contact Links
