@@ -485,29 +485,53 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      gap: 12px;
       flex: 1;
+      padding: 8px 0;
     }
 
     .qr-card-image {
-      width: 140px;
-      height: 140px;
+      width: 156px;
+      height: 156px;
       background: #ffffff;
-      padding: 8px;
-      border-radius: 12px;
-      border: 1px solid #cbd5e1;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      border-radius: 16px;
+      border: 2px solid rgba(1, 54, 107, 0.15);
+      box-shadow: 0 10px 25px -4px rgba(1, 54, 107, 0.18), 0 4px 10px rgba(0, 0, 0, 0.05);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    [data-theme="dark"] .qr-card-image {
+      background: #ffffff;
+      border-color: rgba(255, 255, 255, 0.25);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
+    }
+    .qr-card-image:hover {
+      transform: scale(1.02);
     }
     .qr-card-image img {
       width: 100%;
       height: 100%;
       display: block;
+      object-fit: contain;
+      border-radius: 6px;
     }
 
     .qr-card-text {
-      font-size: 0.76rem;
-      color: var(--text-muted);
-      font-weight: 600;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: 9999px;
+      background: var(--icon-box-bg);
+      border: 1px solid var(--icon-box-border);
+      color: var(--icon-color);
     }
 
     /* Flip Card Control Bar */
@@ -829,7 +853,10 @@
               <img src="/p/{{SLUG}}/qr.png" alt="CUA Card QR Code" />
             </div>
             <div class="qr-card-text">
-              Scan with phone camera if NFC tap is unavailable
+              <svg style="width: 13px; height: 13px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+              </svg>
+              <span>Scan with phone camera</span>
             </div>
           </div>
 

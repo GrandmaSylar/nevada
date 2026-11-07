@@ -4,6 +4,7 @@ const fs = require('fs');
 const QRCode = require('qrcode');
 const { db } = require('../db');
 const { generateVCard } = require('../vcard');
+const { generateStyledQr } = require('../qr');
 
 const router = express.Router();
 const PROFILE_HTML_PATH = path.join(__dirname, '..', 'views', 'profile.html');
@@ -166,7 +167,7 @@ router.get('/:slug/vcard', async (req, res) => {
   }
 });
 
-// Dynamic high-contrast QR Code generation (print-ready for black cards)
+// Dynamic high-contrast QR Code generation with centered CUA Logo (print-ready)
 router.get('/:slug/qr.png', async (req, res) => {
   try {
     const slug = req.params.slug.toLowerCase().trim();
@@ -180,16 +181,11 @@ router.get('/:slug/qr.png', async (req, res) => {
     const protocol = req.protocol;
     const targetUrl = `${protocol}://${host}/p/${staff.slug}?src=qr`;
 
-    // Generate high-resolution QR with white border/box for black cards
-    const qrBuffer = await QRCode.toBuffer(targetUrl, {
-      type: 'png',
+    // Generate high-resolution styled QR with dark navy color (#002244) and centered CUA logo
+    const qrBuffer = await generateStyledQr(targetUrl, {
       width: 600,
-      margin: 4,
-      color: {
-        dark: '#000000',
-        light: '#ffffff'
-      },
-      errorCorrectionLevel: 'M'
+      darkColor: '#002244',
+      lightColor: '#ffffff'
     });
 
     res.setHeader('Content-Type', 'image/png');
