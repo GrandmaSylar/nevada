@@ -3,30 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard | Digital NFC Cards</title>
+  <title>CUA Digital Cards Portal | Ghana Co-operative Credit Unions Association</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <style>
     :root {
-      --bg: #090d16;
-      --card-bg: #131b2e;
-      --card-border: rgba(255, 255, 255, 0.08);
+      --cua-navy: #01366b;
+      --cua-navy-dark: #002244;
+      --cua-navy-light: #0b4582;
+      --cua-red: #c94b43;
+      --cua-red-dark: #a83831;
+      --bg: #071527;
+      --panel-bg: #0d223f;
+      --panel-border: rgba(255, 255, 255, 0.1);
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --danger: #ef4444;
-      --success: #10b981;
       --input-bg: rgba(255, 255, 255, 0.05);
+      --success: #10b981;
+      --danger: #ef4444;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background: var(--bg); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      background: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(1, 54, 107, 0.5) 0px, transparent 55%),
+        radial-gradient(at 100% 100%, rgba(201, 75, 67, 0.18) 0px, transparent 50%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
     /* Top Nav */
     header {
-      background: rgba(19, 27, 46, 0.8);
-      border-bottom: 1px solid var(--card-border);
-      backdrop-filter: blur(12px);
-      padding: 16px 24px;
+      background: rgba(13, 34, 63, 0.85);
+      border-bottom: 1px solid var(--panel-border);
+      backdrop-filter: blur(16px);
+      padding: 14px 28px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -34,140 +50,452 @@
       top: 0;
       z-index: 50;
     }
-    .brand { font-size: 1.25rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .brand span { color: var(--accent); }
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-logo-img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+      background: #ffffff;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+    .brand-text h1 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+    }
+    .brand-text p {
+      font-size: 0.75rem;
+      color: #93c5fd;
+      font-weight: 500;
+    }
     .header-actions { display: flex; align-items: center; gap: 12px; }
+
+    /* SVG Icon sizing */
+    .icon {
+      width: 16px;
+      height: 16px;
+      display: inline-block;
+      vertical-align: middle;
+      stroke-width: 2;
+    }
 
     /* Buttons */
     .btn {
-      padding: 8px 16px;
+      padding: 9px 16px;
       border-radius: 10px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
       border: none;
       transition: all 0.15s ease;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 7px;
       text-decoration: none;
+      letter-spacing: 0.01em;
     }
-    .btn-primary { background: var(--accent); color: #fff; }
-    .btn-primary:hover { background: var(--accent-hover); }
-    .btn-secondary { background: rgba(255, 255, 255, 0.08); color: var(--text-main); border: 1px solid var(--card-border); }
-    .btn-secondary:hover { background: rgba(255, 255, 255, 0.14); }
-    .btn-danger { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
-    .btn-danger:hover { background: rgba(239, 68, 68, 0.25); }
-    .btn-sm { padding: 6px 10px; font-size: 0.8rem; border-radius: 8px; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cua-navy) 0%, #002244 100%);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 14px rgba(1, 54, 107, 0.4);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--cua-navy-light) 0%, var(--cua-navy) 100%);
+    }
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border: 1px solid var(--panel-border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+    .btn-sm { padding: 6px 11px; font-size: 0.8rem; border-radius: 8px; }
 
     /* Main Container */
-    main { max-width: 1200px; width: 100%; margin: 0 auto; padding: 24px 20px; flex: 1; }
+    main { max-width: 1240px; width: 100%; margin: 0 auto; padding: 28px 20px; flex: 1; }
 
     /* Tab Controls */
-    .nav-tabs { display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
-    .tab-btn {
-      background: none; border: none; color: var(--text-muted); font-size: 1rem; font-weight: 600; cursor: pointer; padding: 8px 16px; border-radius: 8px; transition: color 0.15s;
+    .nav-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--panel-border);
+      padding-bottom: 12px;
     }
-    .tab-btn.active { color: #fff; background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 8px 18px;
+      border-radius: 10px;
+      transition: all 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn.active {
+      background: rgba(1, 54, 107, 0.6);
+      color: #93c5fd;
+      border: 1px solid rgba(147, 197, 253, 0.25);
+    }
 
-    /* Table & Cards */
-    .panel { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 16px; overflow: hidden; }
-    .panel-header { padding: 18px 20px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
-    .panel-header h2 { font-size: 1.15rem; font-weight: 700; }
+    /* Panel Table */
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    }
+    .panel-header {
+      padding: 18px 22px;
+      border-bottom: 1px solid var(--panel-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .panel-header h2 { font-size: 1.15rem; font-weight: 800; }
 
+    .search-input-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .search-input-box svg {
+      position: absolute;
+      left: 12px;
+      width: 16px;
+      height: 16px;
+      color: var(--text-muted);
+    }
     .search-input {
-      background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 8px 14px; color: #fff; font-size: 0.9rem; outline: none; width: 240px;
+      background: var(--input-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 8px 14px 8px 36px;
+      color: #fff;
+      font-size: 0.88rem;
+      outline: none;
+      width: 260px;
     }
 
     table { width: 100%; border-collapse: collapse; text-align: left; }
-    th { padding: 14px 18px; font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); border-bottom: 1px solid var(--card-border); }
-    td { padding: 14px 18px; font-size: 0.9rem; border-bottom: 1px solid var(--card-border); vertical-align: middle; }
+    th {
+      padding: 14px 18px;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--panel-border);
+      background: rgba(0, 0, 0, 0.15);
+      font-weight: 700;
+    }
+    td {
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--panel-border);
+      vertical-align: middle;
+    }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(255, 255, 255, 0.02); }
 
     .staff-cell { display: flex; align-items: center; gap: 12px; }
-    .table-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; background: #1e293b; border: 2px solid rgba(59, 130, 246, 0.4); flex-shrink: 0; }
-    .table-initials { width: 44px; height: 44px; border-radius: 50%; background: #1e293b; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.95rem; color: #93c5fd; border: 2px solid rgba(59, 130, 246, 0.4); flex-shrink: 0; }
-    .staff-info h4 { font-size: 0.95rem; font-weight: 600; }
-    .staff-info p { font-size: 0.8rem; color: var(--text-muted); }
+    .table-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #10233b;
+      border: 2px solid #3b82f6;
+      flex-shrink: 0;
+    }
+    .table-initials {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cua-navy), #0b2545);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #93c5fd;
+      border: 2px solid #3b82f6;
+      flex-shrink: 0;
+    }
+    .staff-info h4 { font-size: 0.95rem; font-weight: 700; }
+    .staff-info p { font-size: 0.78rem; color: var(--text-muted); }
 
-    .badge { display: inline-block; padding: 3px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.74rem;
+      font-weight: 700;
+    }
     .badge-active { background: rgba(16, 185, 129, 0.15); color: #34d399; }
     .badge-inactive { background: rgba(239, 68, 68, 0.15); color: #f87171; }
 
     .action-group { display: flex; gap: 6px; flex-wrap: wrap; }
 
-    /* Login Screen */
-    #login-view { max-width: 380px; width: 100%; margin: 80px auto; background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; padding: 32px 24px; text-align: center; }
-    #login-view h2 { margin-bottom: 8px; }
-    #login-view p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 24px; }
+    /* High-End Login View */
+    #login-view {
+      max-width: 420px;
+      width: 100%;
+      margin: 60px auto 40px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 24px;
+      padding: 36px 28px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(1, 54, 107, 0.3);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    #login-view::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--cua-red), var(--cua-navy-light));
+    }
+    .login-logo-box {
+      margin-bottom: 20px;
+    }
+    .login-logo-box img {
+      height: 70px;
+      width: auto;
+      background: #ffffff;
+      padding: 8px 16px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+    #login-view h2 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    #login-view .subtext {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+    .login-security-tag {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      color: #94a3b8;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
 
     /* Modal */
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.75); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 16px; }
-    .modal-box { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 20px; width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto; padding: 24px; }
-    .modal-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; }
-    
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
-    .form-col-full { grid-column: span 2; }
-    .form-group label { display: block; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; }
-    .form-group input, .form-group textarea, .form-group select {
-      width: 100%; background: var(--input-bg); border: 1px solid var(--card-border); border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 0.9rem; outline: none;
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 14, 28, 0.85);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 16px;
     }
-    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
-    .avatar-preview-box { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
-    .avatar-preview-box img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
+    .modal-box {
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 26px;
+      box-shadow: 0 25px 60px rgba(0,0,0,0.7);
+    }
+    .modal-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--panel-border);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .form-col-full { grid-column: span 2; }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      background: var(--input-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .form-group input:focus, .form-group textarea:focus {
+      border-color: #3b82f6;
+    }
+    .avatar-preview-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .avatar-preview-box img {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #3b82f6;
+    }
 
     /* Toast */
-    #toast { position: fixed; bottom: 24px; right: 24px; background: #2563eb; color: #fff; padding: 12px 20px; border-radius: 12px; font-weight: 600; display: none; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 200; }
+    #toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--cua-navy);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-weight: 600;
+      display: none;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      z-index: 200;
+    }
   </style>
 </head>
 <body>
 
   <!-- Top Header -->
   <header>
-    <div class="brand">
-      ⚡ <span>Nevada</span> NFC Directory
+    <div class="brand-group">
+      <img src="/images/cua-logo.png" alt="CUA Ghana" class="brand-logo-img" />
+      <div class="brand-text">
+        <h1>CUA Staff Digital Cards Portal</h1>
+        <p>Ghana Co-operative Credit Unions Association</p>
+      </div>
     </div>
     <div class="header-actions" id="header-user-actions" style="display: none;">
-      <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
+      <button class="btn btn-secondary btn-sm" onclick="logout()">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+        </svg>
+        Sign Out
+      </button>
     </div>
   </header>
 
   <!-- Login View -->
   <section id="login-view">
-    <h2>Admin Sign In</h2>
-    <p>Sign in to manage company staff digital cards</p>
+    <div class="login-logo-box">
+      <img src="/images/cua-logo.png" alt="CUA Ghana Logo" />
+    </div>
+    <h2>CUA Portal Sign In</h2>
+    <p class="subtext">Staff Card Directory & Administration</p>
+
     <form onsubmit="handleLogin(event)">
       <div class="form-group" style="text-align: left; margin-bottom: 14px;">
         <label>Admin Email</label>
-        <input type="email" id="login-email" value="admin@example.com" required />
+        <input type="email" id="login-email" value="admin@example.com" placeholder="name@cua.org.gh" required />
       </div>
       <div class="form-group" style="text-align: left; margin-bottom: 20px;">
         <label>Password</label>
         <input type="password" id="login-password" value="admin123" required />
       </div>
       <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; padding: 12px;">
-        Sign In
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+        </svg>
+        Sign In to Portal
       </button>
     </form>
+
+    <div class="login-security-tag">
+      <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+      </svg>
+      <span>Authorized CUA Administration Only</span>
+    </div>
   </section>
 
   <!-- Dashboard Main View -->
   <main id="dashboard-view" style="display: none;">
     
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="switchTab('staff-tab', this)">Staff Directory</button>
-      <button class="tab-btn" onclick="switchTab('leads-tab', this)">Captured Leads</button>
+      <button class="tab-btn active" onclick="switchTab('staff-tab', this)">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+        CUA Staff Directory
+      </button>
+      <button class="tab-btn" onclick="switchTab('leads-tab', this)">
+        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+        </svg>
+        Inbound Leads Inbox
+      </button>
     </div>
 
     <!-- Staff Directory Tab -->
     <div id="staff-tab">
       <div class="panel">
         <div class="panel-header">
-          <h2>All Staff Digital Cards</h2>
+          <h2>Active CUA Staff Cards</h2>
           <div style="display: flex; gap: 12px; align-items: center;">
-            <input type="text" class="search-input" id="search-input" placeholder="Search staff..." oninput="filterStaff()" />
-            <button class="btn btn-primary" onclick="openCreateModal()">+ Add Staff</button>
+            <div class="search-input-box">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
+              <input type="text" class="search-input" id="search-input" placeholder="Search staff by name or dept..." oninput="filterStaff()" />
+            </div>
+            <button class="btn btn-primary" onclick="openCreateModal()">
+              <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+              </svg>
+              Add Staff Member
+            </button>
           </div>
         </div>
 
@@ -175,17 +503,15 @@
           <table>
             <thead>
               <tr>
-                <th>Staff Member</th>
-                <th>Slug / Link</th>
+                <th>CUA Staff Member</th>
+                <th>Card URL</th>
                 <th>Contact</th>
                 <th>Status</th>
-                <th>Card Actions</th>
-                <th>Edit</th>
+                <th>Card Operations</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody id="staff-table-body">
-              <!-- Populated via JS -->
-            </tbody>
+            <tbody id="staff-table-body"></tbody>
           </table>
         </div>
       </div>
@@ -205,13 +531,11 @@
                 <th>Contact Details</th>
                 <th>Staff Recipient</th>
                 <th>Source</th>
-                <th>Note</th>
-                <th>Received At</th>
+                <th>Note / Credit Union</th>
+                <th>Received Date</th>
               </tr>
             </thead>
-            <tbody id="leads-table-body">
-              <!-- Populated via JS -->
-            </tbody>
+            <tbody id="leads-table-body"></tbody>
           </table>
         </div>
       </div>
@@ -223,7 +547,7 @@
   <div id="staff-modal" class="modal-backdrop">
     <div class="modal-box">
       <div class="modal-title-row">
-        <h3 id="modal-heading">Add New Staff Member</h3>
+        <h3 id="modal-heading" style="font-weight: 800;">Add CUA Staff Member</h3>
         <button class="btn btn-secondary btn-sm" onclick="closeStaffModal()">&times;</button>
       </div>
 
@@ -233,15 +557,15 @@
         <div class="form-grid">
           <div class="form-group">
             <label>First Name *</label>
-            <input type="text" id="form-first-name" required oninput="autoGenerateSlug()" />
+            <input type="text" id="form-first-name" placeholder="e.g. Bernard" required oninput="autoGenerateSlug()" />
           </div>
           <div class="form-group">
             <label>Last Name *</label>
-            <input type="text" id="form-last-name" required oninput="autoGenerateSlug()" />
+            <input type="text" id="form-last-name" placeholder="e.g. Anim" required oninput="autoGenerateSlug()" />
           </div>
 
           <div class="form-group form-col-full">
-            <label>Card URL Slug * (e.g. "john-doe" ➔ /p/john-doe)</label>
+            <label>URL Slug * (e.g. "bernard-anim" ➔ /p/bernard-anim)</label>
             <input type="text" id="form-slug" required />
           </div>
 
@@ -251,7 +575,7 @@
             <input type="file" id="form-avatar" accept="image/png, image/jpeg, image/webp" onchange="previewAvatar(event)" />
             <div id="avatar-preview-row" class="avatar-preview-box" style="display: none;">
               <img id="avatar-preview-img" src="" alt="Preview" />
-              <label style="margin: 0; font-size: 0.85rem; cursor: pointer;">
+              <label style="margin: 0; font-size: 0.85rem; cursor: pointer; color: var(--text-muted);">
                 <input type="checkbox" id="form-remove-avatar" /> Remove photo
               </label>
             </div>
@@ -259,29 +583,29 @@
 
           <div class="form-group">
             <label>Job Title</label>
-            <input type="text" id="form-job-title" placeholder="e.g. VP of Sales" />
+            <input type="text" id="form-job-title" placeholder="e.g. Junior IT Officer" />
           </div>
           <div class="form-group">
             <label>Department</label>
-            <input type="text" id="form-department" placeholder="e.g. Commercial" />
+            <input type="text" id="form-department" placeholder="e.g. IT & Innovation" />
           </div>
 
           <div class="form-group">
-            <label>Company</label>
-            <input type="text" id="form-company" value="Nevada Systems" />
+            <label>Organization / Credit Union</label>
+            <input type="text" id="form-company" value="Ghana Co-operative Credit Unions Association" />
           </div>
           <div class="form-group">
             <label>Phone Number</label>
-            <input type="text" id="form-phone" placeholder="+1 555-019-2233" />
+            <input type="text" id="form-phone" placeholder="0248594482" />
           </div>
 
           <div class="form-group">
             <label>Email Address</label>
-            <input type="email" id="form-email" placeholder="name@company.com" />
+            <input type="email" id="form-email" placeholder="name@cua.org.gh" />
           </div>
           <div class="form-group">
             <label>WhatsApp Number</label>
-            <input type="text" id="form-whatsapp" placeholder="+15550192233" />
+            <input type="text" id="form-whatsapp" placeholder="+233248594482" />
           </div>
 
           <div class="form-group">
@@ -289,31 +613,36 @@
             <input type="url" id="form-linkedin" placeholder="https://linkedin.com/in/..." />
           </div>
           <div class="form-group">
-            <label>GitHub URL</label>
+            <label>GitHub / Profile URL</label>
             <input type="url" id="form-github" placeholder="https://github.com/..." />
           </div>
 
           <div class="form-group form-col-full">
             <label>Website URL</label>
-            <input type="url" id="form-website" placeholder="https://company.com" />
+            <input type="url" id="form-website" value="https://www.cua.org.gh/" />
           </div>
 
           <div class="form-group form-col-full">
             <label>Bio / Headline</label>
-            <textarea id="form-bio" rows="2" placeholder="Short intro on card..."></textarea>
+            <textarea id="form-bio" rows="2" placeholder="e.g. Empowering communities through cooperative finance."></textarea>
           </div>
 
           <div class="form-group form-col-full">
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: #fff;">
               <input type="checkbox" id="form-active" checked />
-              Card Active (uncheck to temporarily deactivate)
+              Card Active (Uncheck to temporarily deactivate)
             </label>
           </div>
         </div>
 
         <div style="display: flex; justify-content: flex-end; gap: 10px;">
           <button type="button" class="btn btn-secondary" onclick="closeStaffModal()">Cancel</button>
-          <button type="submit" class="btn btn-primary" id="save-staff-btn">Save Staff Member</button>
+          <button type="submit" class="btn btn-primary" id="save-staff-btn">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            Save Staff Member
+          </button>
         </div>
       </form>
     </div>
@@ -324,7 +653,6 @@
   <script>
     let staffList = [];
 
-    // Check login state on load
     document.addEventListener("DOMContentLoaded", async () => {
       try {
         const res = await fetch('/api/auth/me');
@@ -407,7 +735,7 @@
     function renderStaffTable(list) {
       const tbody = document.getElementById('staff-table-body');
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">No staff cards found. Click "+ Add Staff" to create one.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 36px;">No staff cards registered. Click "+ Add Staff Member" to create one.</td></tr>`;
         return;
       }
 
@@ -415,7 +743,7 @@
         const initials = ((s.first_name || '')[0] || '') + ((s.last_name || '')[0] || '');
         const avatarHtml = s.avatar_path 
           ? `<img src="${s.avatar_path}" class="table-avatar" alt="${s.first_name}" />`
-          : `<div class="table-initials">${initials.toUpperCase()}</div>`;
+          : `<div class="table-initials">${initials.toUpperCase() || 'CU'}</div>`;
 
         const nfcUrl = `${window.location.origin}/p/${s.slug}?src=nfc`;
         const qrUrl = `/p/${s.slug}/qr.png`;
@@ -426,40 +754,62 @@
               <div class="staff-cell">
                 ${avatarHtml}
                 <div class="staff-info">
-                  <h4>${s.first_name} ${s.last_name}</h4>
-                  <p>${s.job_title || 'No Title'} • ${s.department || 'General'}</p>
+                  <h4>${escapeHtml(s.first_name)} ${escapeHtml(s.last_name)}</h4>
+                  <p>${escapeHtml(s.job_title || 'Staff')} • ${escapeHtml(s.department || 'CUA')}</p>
                 </div>
               </div>
             </td>
             <td>
-              <code style="background: rgba(255,255,255,0.06); padding: 3px 6px; border-radius: 4px;">/p/${s.slug}</code>
+              <code style="background: rgba(255,255,255,0.06); padding: 3px 6px; border-radius: 4px; color: #93c5fd;">/p/${s.slug}</code>
             </td>
             <td>
-              <div style="font-size: 0.85rem;">${s.phone || '-'}</div>
-              <div style="font-size: 0.78rem; color: var(--text-muted);">${s.email || '-'}</div>
+              <div style="font-size: 0.85rem; font-weight: 600;">${escapeHtml(s.phone || '-')}</div>
+              <div style="font-size: 0.76rem; color: var(--text-muted);">${escapeHtml(s.email || '-')}</div>
             </td>
             <td>
               <span class="badge ${s.is_active ? 'badge-active' : 'badge-inactive'}">
+                <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="${s.is_active ? 'M5 13l4 4L19 7' : 'M6 18L18 6M6 6l12 12'}"/>
+                </svg>
                 ${s.is_active ? 'Active' : 'Inactive'}
               </span>
             </td>
             <td>
               <div class="action-group">
                 <a href="/p/${s.slug}?src=nfc" target="_blank" class="btn btn-secondary btn-sm" title="Preview live card">
-                  👁️ View
+                  <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                  </svg>
+                  View
                 </a>
                 <button class="btn btn-secondary btn-sm" onclick="copyNfcUrl('${nfcUrl}')" title="Copy URL for NFC Tools app">
-                  ⚡ Copy NFC Link
+                  <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                  </svg>
+                  Copy NFC Link
                 </button>
                 <a href="${qrUrl}" download="qr_${s.slug}.png" class="btn btn-secondary btn-sm" title="Download print-ready QR">
-                  📷 Print QR
+                  <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+                  </svg>
+                  Print QR
                 </a>
               </div>
             </td>
             <td>
               <div class="action-group">
-                <button class="btn btn-secondary btn-sm" onclick="openEditModal('${s.id}')">✏️ Edit</button>
-                <button class="btn btn-danger btn-sm" onclick="deleteStaff('${s.id}', '${s.first_name}')">🗑️</button>
+                <button class="btn btn-secondary btn-sm" onclick="openEditModal('${s.id}')">
+                  <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                  </svg>
+                  Edit
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="deleteStaff('${s.id}', '${escapeAttr(s.first_name)}')">
+                  <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                </button>
               </div>
             </td>
           </tr>
@@ -480,7 +830,7 @@
 
     function copyNfcUrl(url) {
       navigator.clipboard.writeText(url);
-      showToast('NFC URL copied to clipboard! Ready to paste into NFC Tools.');
+      showToast('CUA NFC URL copied to clipboard! Ready to paste into NFC Tools.');
     }
 
     async function loadLeads() {
@@ -491,7 +841,7 @@
         const leads = data.leads || [];
 
         if (leads.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 32px;">No leads collected yet. When recipients tap "Exchange Contact", leads will appear here.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 36px;">No inbound leads recorded yet.</td></tr>`;
           return;
         }
 
@@ -499,8 +849,12 @@
           <tr>
             <td><strong>${escapeHtml(l.visitor_name)}</strong></td>
             <td>${escapeHtml(l.visitor_contact)}</td>
-            <td>${l.first_name ? `${l.first_name} ${l.last_name}` : 'Staff Member'}</td>
-            <td><span class="badge ${l.source === 'nfc' ? 'badge-active' : 'badge-inactive'}">${(l.source || 'direct').toUpperCase()}</span></td>
+            <td>${l.first_name ? `${escapeHtml(l.first_name)} ${escapeHtml(l.last_name)}` : 'CUA Staff'}</td>
+            <td>
+              <span class="badge ${l.source === 'nfc' ? 'badge-active' : 'badge-inactive'}">
+                ${(l.source || 'direct').toUpperCase()}
+              </span>
+            </td>
             <td><small style="color: var(--text-muted);">${escapeHtml(l.visitor_note || '-')}</small></td>
             <td><small style="color: var(--text-muted);">${new Date(l.created_at).toLocaleDateString()}</small></td>
           </tr>
@@ -512,10 +866,11 @@
 
     // Modal Operations
     function openCreateModal() {
-      document.getElementById('modal-heading').textContent = 'Add New Staff Member';
+      document.getElementById('modal-heading').textContent = 'Add CUA Staff Member';
       document.getElementById('staff-id').value = '';
       document.getElementById('staff-form').reset();
-      document.getElementById('form-slug').readOnly = false;
+      document.getElementById('form-company').value = 'Ghana Co-operative Credit Unions Association';
+      document.getElementById('form-website').value = 'https://www.cua.org.gh/';
       document.getElementById('avatar-preview-row').style.display = 'none';
       document.getElementById('staff-modal').style.display = 'flex';
     }
@@ -524,20 +879,20 @@
       const staff = staffList.find(s => s.id === id);
       if (!staff) return;
 
-      document.getElementById('modal-heading').textContent = `Edit ${staff.first_name} ${staff.last_name}`;
+      document.getElementById('modal-heading').textContent = `Edit: ${staff.first_name} ${staff.last_name}`;
       document.getElementById('staff-id').value = staff.id;
       document.getElementById('form-first-name').value = staff.first_name || '';
       document.getElementById('form-last-name').value = staff.last_name || '';
       document.getElementById('form-slug').value = staff.slug || '';
       document.getElementById('form-job-title').value = staff.job_title || '';
       document.getElementById('form-department').value = staff.department || '';
-      document.getElementById('form-company').value = staff.company || 'Nevada Systems';
+      document.getElementById('form-company').value = staff.company || 'Ghana Co-operative Credit Unions Association';
       document.getElementById('form-phone').value = staff.phone || '';
       document.getElementById('form-email').value = staff.email || '';
       document.getElementById('form-whatsapp').value = staff.whatsapp || '';
       document.getElementById('form-linkedin').value = staff.linkedin_url || '';
       document.getElementById('form-github').value = staff.github_url || '';
-      document.getElementById('form-website').value = staff.website_url || '';
+      document.getElementById('form-website').value = staff.website_url || 'https://www.cua.org.gh/';
       document.getElementById('form-bio').value = staff.bio || '';
       document.getElementById('form-active').checked = !!staff.is_active;
 
@@ -561,7 +916,6 @@
     }
 
     function autoGenerateSlug() {
-      // Only auto-generate slug for new records
       if (document.getElementById('staff-id').value) return;
       const first = document.getElementById('form-first-name').value.trim();
       const last = document.getElementById('form-last-name').value.trim();
@@ -616,7 +970,7 @@
         const data = await res.json();
         if (data.success) {
           closeStaffModal();
-          showToast(isEdit ? 'Staff member updated!' : 'New staff member added!');
+          showToast(isEdit ? 'CUA staff profile updated!' : 'New CUA staff member added!');
           loadStaff();
         } else {
           alert(data.error || 'Failed to save staff member.');
@@ -627,7 +981,7 @@
     }
 
     async function deleteStaff(id, name) {
-      if (!confirm(`Are you sure you want to delete ${name}'s digital card? This cannot be undone.`)) return;
+      if (!confirm(`Are you sure you want to delete ${name}'s CUA digital card? This cannot be undone.`)) return;
       try {
         const res = await fetch(`/api/admin/staff/${id}`, { method: 'DELETE' });
         const data = await res.json();
@@ -647,7 +1001,10 @@
         '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
       }[tag] || tag));
     }
+
+    function escapeAttr(str) {
+      return String(str || '').replace(/"/g, '&quot;');
+    }
   </script>
 </body>
 </html>
-
