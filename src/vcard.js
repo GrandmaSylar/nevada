@@ -26,18 +26,11 @@ function generateVCard(staff, baseUrl) {
   }
   if (staff.website_url) {
     lines.push(`URL;TYPE=WORK:${staff.website_url}`);
-  } else if (baseUrl) {
-    lines.push(`URL;TYPE=WORK:${baseUrl}/p/${staff.slug}`);
+  } else {
+    lines.push('URL;TYPE=WORK:https://www.cua.org.gh/');
   }
-  if (staff.linkedin_url) {
-    lines.push(`X-SOCIALPROFILE;TYPE=linkedin:${staff.linkedin_url}`);
-  }
-  if (staff.github_url) {
-    lines.push(`X-SOCIALPROFILE;TYPE=github:${staff.github_url}`);
-  }
-  if (staff.bio) {
-    lines.push(`NOTE:${staff.bio.replace(/\r?\n/g, '\\n')}`);
-  }
+  lines.push('ADR;TYPE=WORK:;;44 Jones Nelson Street, Adabraka;Accra;;;Ghana');
+  lines.push('NOTE:Ghana Co-operative Credit Unions Association (CUA) - ...building a happy family');
 
   // Embed Profile Picture
   if (staff.avatar_path) {

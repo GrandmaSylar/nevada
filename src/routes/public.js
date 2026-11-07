@@ -48,25 +48,35 @@ router.get('/:slug', async (req, res) => {
     const protocol = req.protocol;
     const baseUrl = `${protocol}://${host}`;
 
+    const staffData = {
+      ...staff,
+      company: staff.company || 'Ghana Co-operative Credit Unions Association',
+      website_url: staff.website_url || 'https://www.cua.org.gh/',
+      location_url: 'https://www.google.com/maps/search/?api=1&query=44+Jones+Nelson+Street+Adabraka+Accra+Ghana',
+      address: '44 Jones Nelson Street, Adabraka, Accra, Ghana'
+    };
+
     template = template
-      .replace(/{{SLUG}}/g, staff.slug)
-      .replace(/{{FIRST_NAME}}/g, staff.first_name || '')
-      .replace(/{{LAST_NAME}}/g, staff.last_name || '')
-      .replace(/{{FULL_NAME}}/g, `${staff.first_name} ${staff.last_name}`.trim())
-      .replace(/{{JOB_TITLE}}/g, staff.job_title || '')
-      .replace(/{{DEPARTMENT}}/g, staff.department || '')
-      .replace(/{{COMPANY}}/g, staff.company || 'Nevada')
-      .replace(/{{PHONE}}/g, staff.phone || '')
-      .replace(/{{EMAIL}}/g, staff.email || '')
-      .replace(/{{WHATSAPP}}/g, staff.whatsapp || '')
-      .replace(/{{LINKEDIN}}/g, staff.linkedin_url || '')
-      .replace(/{{GITHUB}}/g, staff.github_url || '')
-      .replace(/{{WEBSITE}}/g, staff.website_url || '')
-      .replace(/{{BIO}}/g, staff.bio || '')
-      .replace(/{{AVATAR_PATH}}/g, staff.avatar_path || '')
+      .replace(/{{SLUG}}/g, staffData.slug)
+      .replace(/{{FIRST_NAME}}/g, staffData.first_name || '')
+      .replace(/{{LAST_NAME}}/g, staffData.last_name || '')
+      .replace(/{{FULL_NAME}}/g, `${staffData.first_name} ${staffData.last_name}`.trim())
+      .replace(/{{JOB_TITLE}}/g, staffData.job_title || '')
+      .replace(/{{DEPARTMENT}}/g, staffData.department || '')
+      .replace(/{{COMPANY}}/g, staffData.company)
+      .replace(/{{PHONE}}/g, staffData.phone || '')
+      .replace(/{{EMAIL}}/g, staffData.email || '')
+      .replace(/{{WHATSAPP}}/g, staffData.whatsapp || '')
+      .replace(/{{LINKEDIN}}/g, staffData.linkedin_url || '')
+      .replace(/{{GITHUB}}/g, staffData.github_url || '')
+      .replace(/{{WEBSITE}}/g, staffData.website_url)
+      .replace(/{{LOCATION_URL}}/g, staffData.location_url)
+      .replace(/{{ADDRESS}}/g, staffData.address)
+      .replace(/{{BIO}}/g, staffData.bio || '')
+      .replace(/{{AVATAR_PATH}}/g, staffData.avatar_path || '')
       .replace(/{{INITIALS}}/g, initials)
       .replace(/{{BASE_URL}}/g, baseUrl)
-      .replace(/{{DATA_JSON}}/g, JSON.stringify(staff).replace(/"/g, '&quot;'));
+      .replace(/{{DATA_JSON}}/g, JSON.stringify(staffData).replace(/"/g, '&quot;'));
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.send(template);
