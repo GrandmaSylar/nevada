@@ -221,6 +221,7 @@
       transform: rotateY(0deg);
       gap: 14px;
       z-index: 2;
+      pointer-events: auto;
     }
 
     .card-front-top {
@@ -452,6 +453,18 @@
       justify-content: space-between;
       text-align: center;
       z-index: 1;
+      pointer-events: none;
+      cursor: pointer;
+    }
+
+    .card-flipper.is-flipped .card-front {
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .card-flipper.is-flipped .card-back {
+      z-index: 2;
+      pointer-events: auto;
     }
 
     .mag-stripe {
@@ -803,7 +816,7 @@
         </div>
 
         <!-- BACK SIDE: Magnetic Stripe & Camera QR Fallback -->
-        <div class="card-face card-back">
+        <div class="card-face card-back" onclick="flipCard()" title="Tap to flip to card front">
           <div class="mag-stripe"></div>
           
           <div class="qr-card-container">
@@ -917,8 +930,17 @@
     </div>
   </div>
 
+  <script id="cua-staff-data" type="application/json">{{DATA_JSON}}</script>
   <script>
-    const staff = JSON.parse('{{DATA_JSON}}');
+    let staff = {};
+    try {
+      const dataEl = document.getElementById('cua-staff-data');
+      if (dataEl && dataEl.textContent) {
+        staff = JSON.parse(dataEl.textContent);
+      }
+    } catch (err) {
+      console.warn('Could not parse embedded staff data:', err);
+    }
     const slug = '{{SLUG}}';
 
     // 3D Card Flip Animation Logic
@@ -927,17 +949,20 @@
       const flipper = document.getElementById('card-flipper');
       const text = document.getElementById('flip-btn-text');
       const icon = document.getElementById('flip-btn-icon');
+      if (!flipper) return;
+
       isFlipped = !isFlipped;
       if (isFlipped) {
         flipper.classList.add('is-flipped');
-        text.textContent = 'Flip to Card Front';
+        if (text) text.textContent = 'Flip to Card Front';
         if (icon) icon.style.transform = 'rotate(180deg)';
       } else {
         flipper.classList.remove('is-flipped');
-        text.textContent = 'Flip to Card Back (QR Code)';
+        if (text) text.textContent = 'Flip to Card Back (QR Code)';
         if (icon) icon.style.transform = 'rotate(0deg)';
       }
     }
+    window.flipCard = flipCard;
 
     // Theme Toggle Logic
     function updateThemeIcons(theme) {
@@ -963,6 +988,12 @@
     document.addEventListener("DOMContentLoaded", () => {
       const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
       updateThemeIcons(currentTheme);
+
+      // Attach flip button listener
+      const flipBtn = document.getElementById('flip-card-btn');
+      if (flipBtn) {
+        flipBtn.addEventListener('click', flipCard);
+      }
 
       // Render Contact Links
       const linksContainer = document.getElementById("links-container");

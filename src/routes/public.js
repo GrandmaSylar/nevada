@@ -82,7 +82,7 @@ router.get('/:slug', async (req, res) => {
       .replace(/{{AVATAR_PATH}}/g, staffDataForJson.avatar_path || '')
       .replace(/{{INITIALS}}/g, initials)
       .replace(/{{BASE_URL}}/g, baseUrl)
-      .replace(/{{DATA_JSON}}/g, JSON.stringify(staffDataForJson).replace(/"/g, '&quot;'));
+      .replace(/{{DATA_JSON}}/g, JSON.stringify(staffDataForJson).replace(/</g, '\\u003c'));
 
     res.setHeader('Content-Type', 'text/html; charset=utf-8');
     return res.send(template);

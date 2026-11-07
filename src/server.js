@@ -41,9 +41,9 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'admin.html'));
 });
 
-// Root Landing
+// Root Landing - direct to primary staff complimentary card (Admin available at /admin)
 app.get('/', (req, res) => {
-  res.redirect('/admin');
+  res.redirect('/p/bernard-anim');
 });
 
 // Standalone Server Start (Only when running locally / Docker, not in Vercel serverless)
