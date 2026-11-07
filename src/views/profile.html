@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -10,22 +10,96 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   
+  <script>
+    // Theme initialization before render to avoid FOUC
+    const savedTheme = localStorage.getItem('cua_card_theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  </script>
+
   <style>
+    /* Default: Light Theme */
     :root {
       --cua-navy: #01366b;
       --cua-navy-dark: #002244;
       --cua-navy-light: #0d4b8a;
       --cua-red: #c94b43;
       --cua-red-dark: #a83831;
+      
+      --bg: #f1f5f9;
+      --bg-gradient: radial-gradient(at 0% 0%, rgba(1, 54, 107, 0.08) 0px, transparent 55%),
+                     radial-gradient(at 100% 100%, rgba(201, 75, 67, 0.06) 0px, transparent 50%);
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --card-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+      
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-sub: #475569;
+      
+      --btn-bg: #f8fafc;
+      --btn-border: #e2e8f0;
+      --btn-hover: #e2e8f0;
+      --btn-text: #0f172a;
+      
+      --icon-box-bg: #edf4fb;
+      --icon-box-border: #d0e2f5;
+      --icon-color: #01366b;
+      
+      --dept-badge-bg: #edf4fb;
+      --dept-badge-color: #01366b;
+      --dept-badge-border: #d0e2f5;
+      
+      --pill-badge-bg: #edf4fb;
+      --pill-badge-color: #01366b;
+      --pill-badge-border: #cbd5e1;
+
+      --input-bg: #ffffff;
+      --input-border: #cbd5e1;
+      --modal-bg: #ffffff;
+      --modal-border: #e2e8f0;
+      --footer-border: #e2e8f0;
+      --toggle-bg: #e2e8f0;
+      --toggle-color: #0f172a;
+    }
+
+    /* Dark Mode Theme */
+    [data-theme="dark"] {
       --bg: #071527;
+      --bg-gradient: radial-gradient(at 0% 0%, rgba(1, 54, 107, 0.45) 0px, transparent 55%),
+                     radial-gradient(at 100% 100%, rgba(201, 75, 67, 0.22) 0px, transparent 50%),
+                     radial-gradient(at 50% 50%, rgba(0, 34, 68, 0.6) 0px, transparent 100%);
       --card-bg: rgba(13, 31, 56, 0.88);
       --card-border: rgba(255, 255, 255, 0.1);
+      --card-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(1, 54, 107, 0.2);
+      
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
-      --gold: #f59e0b;
+      --text-sub: #cbd5e1;
+      
       --btn-bg: rgba(255, 255, 255, 0.06);
+      --btn-border: rgba(255, 255, 255, 0.1);
       --btn-hover: rgba(255, 255, 255, 0.12);
-      --success: #10b981;
+      --btn-text: #f8fafc;
+      
+      --icon-box-bg: rgba(1, 54, 107, 0.35);
+      --icon-box-border: rgba(59, 130, 246, 0.2);
+      --icon-color: #93c5fd;
+      
+      --dept-badge-bg: rgba(1, 54, 107, 0.45);
+      --dept-badge-color: #93c5fd;
+      --dept-badge-border: rgba(59, 130, 246, 0.25);
+      
+      --pill-badge-bg: rgba(1, 54, 107, 0.4);
+      --pill-badge-color: #93c5fd;
+      --pill-badge-border: rgba(147, 197, 253, 0.25);
+
+      --input-bg: rgba(255, 255, 255, 0.06);
+      --input-border: rgba(255, 255, 255, 0.12);
+      --modal-bg: #0d223f;
+      --modal-border: rgba(255, 255, 255, 0.15);
+      --footer-border: rgba(255, 255, 255, 0.08);
+      --toggle-bg: rgba(255, 255, 255, 0.1);
+      --toggle-color: #f8fafc;
     }
 
     * {
@@ -34,14 +108,12 @@
       padding: 0;
       font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
+      transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
     }
 
     body {
       background: var(--bg);
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(1, 54, 107, 0.45) 0px, transparent 55%),
-        radial-gradient(at 100% 100%, rgba(201, 75, 67, 0.22) 0px, transparent 50%),
-        radial-gradient(at 50% 50%, rgba(0, 34, 68, 0.6) 0px, transparent 100%);
+      background-image: var(--bg-gradient);
       min-height: 100vh;
       display: flex;
       justify-content: center;
@@ -58,10 +130,13 @@
       gap: 14px;
     }
 
-    .badge-bar {
+    /* Top control bar: Attribution Badge & Theme Switcher */
+    .top-controls {
       display: flex;
-      justify-content: center;
-      min-height: 26px;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 4px;
     }
 
     .pill-badge {
@@ -72,10 +147,9 @@
       font-weight: 600;
       padding: 4px 12px;
       border-radius: 9999px;
-      background: rgba(1, 54, 107, 0.4);
-      color: #93c5fd;
-      border: 1px solid rgba(147, 197, 253, 0.25);
-      backdrop-filter: blur(8px);
+      background: var(--pill-badge-bg);
+      color: var(--pill-badge-color);
+      border: 1px solid var(--pill-badge-border);
       letter-spacing: 0.02em;
     }
 
@@ -85,6 +159,32 @@
       stroke-width: 2.2;
     }
 
+    /* Dark/Light Theme Toggle Button */
+    .theme-toggle-btn {
+      background: var(--toggle-bg);
+      border: 1px solid var(--card-border);
+      color: var(--toggle-color);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    }
+
+    .theme-toggle-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .theme-toggle-btn svg {
+      width: 18px;
+      height: 18px;
+      stroke-width: 2;
+    }
+
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -92,13 +192,13 @@
       padding: 24px 20px 22px;
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(1, 54, 107, 0.2);
+      box-shadow: var(--card-shadow);
       text-align: center;
       position: relative;
       overflow: hidden;
     }
 
-    /* Subtle top accent bar in CUA Crimson */
+    /* Top accent bar in CUA Crimson */
     .card::before {
       content: '';
       position: absolute;
@@ -117,25 +217,27 @@
       justify-content: center;
       margin-bottom: 20px;
       padding-bottom: 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid var(--footer-border);
     }
 
     .cua-brand-logo {
       height: 60px;
       width: auto;
       object-fit: contain;
-      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
-      background: rgba(255, 255, 255, 0.95);
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1));
+      background: #ffffff;
       padding: 6px 14px;
       border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.06);
     }
 
     .cua-motto {
-      font-size: 0.72rem;
-      color: #cbd5e1;
+      font-size: 0.74rem;
+      color: var(--text-muted);
       font-style: italic;
       margin-top: 6px;
       letter-spacing: 0.03em;
+      font-weight: 500;
     }
 
     .avatar-wrapper {
@@ -151,8 +253,8 @@
       border-radius: 50%;
       object-fit: cover;
       border: 3px solid #3b82f6;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-      background: #10233b;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      background: #e2e8f0;
       display: block;
     }
 
@@ -168,7 +270,7 @@
       font-weight: 800;
       color: #ffffff;
       border: 3px solid #3b82f6;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
 
     .nfc-icon-chip {
@@ -182,8 +284,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.6);
-      border: 2px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      border: 2px solid #ffffff;
       color: #60a5fa;
     }
 
@@ -197,26 +299,26 @@
       font-weight: 800;
       letter-spacing: -0.02em;
       margin-bottom: 4px;
-      color: #ffffff;
+      color: var(--text-main);
     }
 
     .title {
       font-size: 0.95rem;
-      color: #cbd5e1;
-      margin-bottom: 4px;
+      color: var(--text-sub);
+      margin-bottom: 6px;
       font-weight: 600;
     }
 
     .department-badge {
       display: inline-block;
       font-size: 0.76rem;
-      color: #93c5fd;
-      background: rgba(1, 54, 107, 0.45);
+      color: var(--dept-badge-color);
+      background: var(--dept-badge-bg);
       padding: 3px 10px;
       border-radius: 6px;
       font-weight: 600;
       margin-bottom: 6px;
-      border: 1px solid rgba(59, 130, 246, 0.25);
+      border: 1px solid var(--dept-badge-border);
     }
 
     .company {
@@ -230,7 +332,7 @@
 
     .bio-text {
       font-size: 0.88rem;
-      color: #cbd5e1;
+      color: var(--text-sub);
       line-height: 1.5;
       margin-bottom: 20px;
       padding: 0 6px;
@@ -256,7 +358,7 @@
       border-radius: 14px;
       font-size: 0.98rem;
       font-weight: 700;
-      box-shadow: 0 8px 20px rgba(1, 54, 107, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 20px rgba(1, 54, 107, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.15);
       cursor: pointer;
       width: 100%;
@@ -273,14 +375,14 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-main);
+      background: var(--btn-bg);
+      color: var(--btn-text);
       text-decoration: none;
       padding: 12px 18px;
       border-radius: 14px;
       font-size: 0.92rem;
       font-weight: 600;
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--btn-border);
       cursor: pointer;
       transition: background 0.15s;
       width: 100%;
@@ -320,8 +422,8 @@
       padding: 12px 14px;
       border-radius: 14px;
       background: var(--btn-bg);
-      border: 1px solid var(--card-border);
-      color: var(--text-main);
+      border: 1px solid var(--btn-border);
+      color: var(--btn-text);
       text-decoration: none;
       transition: background 0.15s, transform 0.1s;
     }
@@ -343,12 +445,12 @@
       width: 38px;
       height: 38px;
       border-radius: 10px;
-      background: rgba(1, 54, 107, 0.35);
-      border: 1px solid rgba(59, 130, 246, 0.2);
+      background: var(--icon-box-bg);
+      border: 1px solid var(--icon-box-border);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #93c5fd;
+      color: var(--icon-color);
       flex-shrink: 0;
     }
 
@@ -366,7 +468,7 @@
     .card-footer {
       margin-top: 22px;
       padding-top: 14px;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: 1px solid var(--footer-border);
       font-size: 0.74rem;
       color: var(--text-muted);
       display: flex;
@@ -376,16 +478,19 @@
     }
 
     .card-footer-motto {
-      color: #e2e8f0;
-      font-weight: 600;
+      color: var(--cua-navy);
+      font-weight: 700;
       font-style: italic;
+    }
+    [data-theme="dark"] .card-footer-motto {
+      color: #e2e8f0;
     }
 
     /* Modals */
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(4, 14, 28, 0.82);
+      background: rgba(4, 14, 28, 0.7);
       backdrop-filter: blur(8px);
       display: none;
       align-items: flex-end;
@@ -395,13 +500,14 @@
     }
 
     .modal-sheet {
-      background: #0d223f;
+      background: var(--modal-bg);
+      color: var(--text-main);
       width: 100%;
       max-width: 440px;
       border-radius: 28px 28px 0 0;
       padding: 24px 20px 32px;
-      border-top: 1px solid rgba(255, 255, 255, 0.15);
-      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+      border-top: 1px solid var(--modal-border);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.4);
       animation: slideUp 0.25s ease-out;
     }
 
@@ -421,7 +527,7 @@
     }
 
     .close-btn {
-      background: rgba(255, 255, 255, 0.1);
+      background: var(--toggle-bg);
       border: none;
       color: var(--text-muted);
       width: 32px;
@@ -449,11 +555,11 @@
     }
 
     .form-input {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--card-border);
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
       border-radius: 12px;
       padding: 12px 14px;
-      color: #fff;
+      color: var(--text-main);
       font-size: 0.95rem;
       outline: none;
     }
@@ -463,7 +569,7 @@
     }
 
     .qr-preview-box {
-      background: #fff;
+      background: #ffffff;
       border-radius: 16px;
       padding: 16px;
       display: flex;
@@ -471,6 +577,8 @@
       align-items: center;
       margin: 16px auto 8px;
       width: fit-content;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e2e8f0;
     }
 
     .qr-preview-box img {
@@ -487,9 +595,18 @@
 
   <div class="container">
     
-    <!-- Source Attribution Badge -->
-    <div class="badge-bar">
+    <!-- Top Controls: Source Badge & Dark/Light Toggle -->
+    <div class="top-controls">
       <div id="source-badge" class="pill-badge" style="display: none;"></div>
+      <div style="flex: 1;"></div>
+      <button class="theme-toggle-btn" id="theme-toggle-btn" onclick="toggleTheme()" title="Toggle Light / Dark Mode">
+        <svg id="theme-sun-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="display: none;">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+        </svg>
+        <svg id="theme-moon-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+        </svg>
+      </button>
     </div>
 
     <!-- Main Card -->
@@ -553,7 +670,7 @@
     <div class="modal-sheet">
       <div class="modal-header">
         <h3>
-          <svg style="width: 20px; height: 20px; color: #60a5fa;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg style="width: 20px; height: 20px; color: var(--cua-navy);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
           </svg>
           Connect with {{FIRST_NAME}}
@@ -585,7 +702,7 @@
     <div class="modal-sheet" style="text-align: center;">
       <div class="modal-header">
         <h3 style="justify-content: center; width: 100%;">
-          <svg style="width: 20px; height: 20px; color: #60a5fa;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg style="width: 20px; height: 20px; color: var(--cua-navy);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
           </svg>
           Card QR Code
@@ -598,7 +715,7 @@
       <div class="qr-preview-box">
         <img src="/p/{{SLUG}}/qr.png" alt="Card QR Code" />
       </div>
-      <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 8px;">
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">
         Ghana Co-operative Credit Unions Association
       </p>
     </div>
@@ -608,7 +725,32 @@
     const staff = JSON.parse('{{DATA_JSON}}');
     const slug = '{{SLUG}}';
 
+    // Theme Toggle Logic
+    function updateThemeIcons(theme) {
+      const sun = document.getElementById("theme-sun-icon");
+      const moon = document.getElementById("theme-moon-icon");
+      if (theme === 'dark') {
+        sun.style.display = 'block';
+        moon.style.display = 'none';
+      } else {
+        sun.style.display = 'none';
+        moon.style.display = 'block';
+      }
+    }
+
+    function toggleTheme() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('cua_card_theme', next);
+      updateThemeIcons(next);
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
+      // Sync initial theme icons
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      updateThemeIcons(currentTheme);
+
       // 1. Render Avatar
       const avatarBox = document.getElementById("avatar-container");
       if (staff.avatar_path) {
@@ -672,7 +814,7 @@
         html += `
           <a href="https://wa.me/${waNum}" target="_blank" rel="noopener" class="link-row">
             <div class="link-left">
-              <div class="link-icon-box" style="color: #25D366; background: rgba(37, 211, 102, 0.15); border-color: rgba(37, 211, 102, 0.25);">
+              <div class="link-icon-box" style="color: #25D366; background: rgba(37, 211, 102, 0.12); border-color: rgba(37, 211, 102, 0.25);">
                 <svg fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0012.04 2zm5.79 14.12c-.24.68-1.39 1.3-1.92 1.38-.49.07-1.12.1-3.23-.77-2.69-1.11-4.43-3.86-4.57-4.04-.13-.18-1.1-1.46-1.1-2.79 0-1.33.7-1.98.95-2.25.25-.26.54-.33.72-.33.18 0 .36 0 .52.01.17.01.39-.06.61.47.23.55.77 1.88.84 2.02.07.14.11.31.02.5-.09.18-.14.3-.27.46-.14.16-.29.35-.41.47-.14.14-.29.29-.12.58.17.28.75 1.24 1.6 2 .1.09 2.02 1.38 2.02 1.38.28.16.44.14.61-.05.17-.18.73-.85.92-1.14.19-.29.38-.24.64-.15.26.1 1.64.77 1.92.91.28.14.47.21.54.33.07.12.07.7-.17 1.38z"/>
                 </svg>
