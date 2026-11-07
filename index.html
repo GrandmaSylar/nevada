@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Digital Business Card</title>
+  <meta name="description" content="Digital business card with instant contact download" />
+  <meta name="theme-color" content="#0b0f19" />
+  
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(22, 29, 47, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      --btn-bg: rgba(255, 255, 255, 0.05);
+      --btn-hover: rgba(255, 255, 255, 0.12);
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 50%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px 40px;
+      color: var(--text-main);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .badge-bar {
+      display: flex;
+      justify-content: center;
+      min-height: 28px;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      backdrop-filter: blur(8px);
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 28px 20px 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 108px;
+      height: 108px;
+      margin: 0 auto 16px;
+    }
+
+    .avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(59, 130, 246, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      background: #1e293b;
+    }
+
+    .avatar-fallback {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      border: 3px solid rgba(59, 130, 246, 0.6);
+    }
+
+    .nfc-icon-chip {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      font-size: 0.8rem;
+    }
+
+    h1 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .title {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .company {
+      font-size: 0.85rem;
+      color: #60a5fa;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+    }
+
+    /* Primary Actions */
+    .cta-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--accent-gradient);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 14px 20px;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+      transition: transform 0.15s, opacity 0.15s;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+      opacity: 0.95;
+    }
+
+    .btn-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--btn-bg);
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-secondary:active {
+      background: var(--btn-hover);
+    }
+
+    /* Contact Links Section */
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .link-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--btn-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .link-row:active {
+      background: var(--btn-hover);
+      transform: scale(0.99);
+    }
+
+    .link-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .link-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .link-right {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Modal Sheet */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal-sheet {
+      background: #161e31;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 28px 28px 0 0;
+      padding: 24px 20px 32px;
+      border-top: 1px solid var(--card-border);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+      animation: slideUp 0.25s ease-out;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+    }
+
+    .qr-preview-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 16px auto 8px;
+      width: fit-content;
+    }
+
+    .qr-preview-box img {
+      width: 180px;
+      height: 180px;
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Source Attribution Badge -->
+    <div class="badge-bar">
+      <div id="source-badge" class="pill-badge" style="display: none;"></div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card">
+      <div class="avatar-wrapper">
+        <div class="avatar-fallback" id="avatar-initials">JD</div>
+        <div class="nfc-icon-chip" title="NFC Enabled">⚡</div>
+      </div>
+
+      <h1 id="profile-name">John Doe</h1>
+      <p class="title" id="profile-title">Founder & Software Engineer</p>
+      <p class="company" id="profile-company">Nevada Tech</p>
+
+      <!-- Primary Action Buttons -->
+      <div class="cta-stack">
+        <a href="contact.vcf" download="contact.vcf" class="btn-primary" id="btn-save-vcf">
+          <span>💾</span>
+          <span>Save to Contacts</span>
+        </a>
+        <button type="button" class="btn-secondary" onclick="openModal('exchange-modal')">
+          <span>🤝</span>
+          <span>Exchange Contact</span>
+        </button>
+      </div>
+
+      <!-- Quick Contact Channels -->
+      <p class="section-label">Direct Connect</p>
+      <div class="link-list">
+        
+        <a href="tel:+15551234567" class="link-row" id="link-phone">
+          <div class="link-left">
+            <div class="link-icon">📞</div>
+            <span>Call Mobile</span>
+          </div>
+          <span class="link-right">+1 (555) 123-4567</span>
+        </a>
+
+        <a href="mailto:john@example.com" class="link-row" id="link-email">
+          <div class="link-left">
+            <div class="link-icon">✉️</div>
+            <span>Email</span>
+          </div>
+          <span class="link-right">john@example.com</span>
+        </a>
+
+        <a href="https://wa.me/15551234567" target="_blank" rel="noopener" class="link-row" id="link-whatsapp">
+          <div class="link-left">
+            <div class="link-icon">💬</div>
+            <span>WhatsApp</span>
+          </div>
+          <span class="link-right">Message</span>
+        </a>
+
+        <a href="https://linkedin.com/" target="_blank" rel="noopener" class="link-row" id="link-linkedin">
+          <div class="link-left">
+            <div class="link-icon">💼</div>
+            <span>LinkedIn</span>
+          </div>
+          <span class="link-right">Connect</span>
+        </a>
+
+        <a href="https://github.com/GrandmaSylar" target="_blank" rel="noopener" class="link-row" id="link-github">
+          <div class="link-left">
+            <div class="link-icon">🐙</div>
+            <span>GitHub</span>
+          </div>
+          <span class="link-right">@GrandmaSylar</span>
+        </a>
+
+        <button type="button" class="link-row" onclick="openModal('qr-modal')" style="width: 100%; cursor: pointer;">
+          <div class="link-left">
+            <div class="link-icon">📷</div>
+            <span>Show My QR Code</span>
+          </div>
+          <span class="link-right">Display</span>
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal: Exchange Contact (2-Way Lead Capture) -->
+  <div id="exchange-modal" class="modal-overlay" onclick="handleOverlayClick(event, 'exchange-modal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3>Share Your Contact</h3>
+        <button class="close-btn" onclick="closeModal('exchange-modal')">&times;</button>
+      </div>
+      <form id="lead-form" onsubmit="handleLeadSubmit(event)">
+        <div class="form-group">
+          <label for="lead-name">Your Full Name</label>
+          <input type="text" id="lead-name" class="form-input" placeholder="e.g. Sarah Connor" required />
+        </div>
+        <div class="form-group">
+          <label for="lead-contact">Phone or Email</label>
+          <input type="text" id="lead-contact" class="form-input" placeholder="e.g. sarah@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="lead-note">Company or Quick Note</label>
+          <input type="text" id="lead-note" class="form-input" placeholder="e.g. Met at Nevada event" />
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 8px;">
+          Send Details Back
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Show QR Code -->
+  <div id="qr-modal" class="modal-overlay" onclick="handleOverlayClick(event, 'qr-modal')">
+    <div class="modal-sheet" style="text-align: center;">
+      <div class="modal-header">
+        <h3>Card QR Code</h3>
+        <button class="close-btn" onclick="closeModal('qr-modal')">&times;</button>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">
+        Let someone scan this code with their camera to open your card.
+      </p>
+      <div class="qr-preview-box">
+        <img src="card_qr.png" alt="Card QR Code" />
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">
+        Fall back for phones without NFC
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // Detect NFC vs QR source attribution from URL query params
+    document.addEventListener("DOMContentLoaded", () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const src = urlParams.get("src");
+      const badge = document.getElementById("source-badge");
+
+      if (src === "nfc") {
+        badge.innerHTML = "⚡ Opened via NFC Card Tap";
+        badge.style.display = "inline-flex";
+      } else if (src === "qr") {
+        badge.innerHTML = "📷 Opened via QR Fallback Scan";
+        badge.style.display = "inline-flex";
+      }
+    });
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "flex";
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "none";
+    }
+
+    function handleOverlayClick(event, id) {
+      if (event.target.id === id) {
+        closeModal(id);
+      }
+    }
+
+    function handleLeadSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById("lead-name").value.trim();
+      const contact = document.getElementById("lead-contact").value.trim();
+      const note = document.getElementById("lead-note").value.trim();
+
+      const newLead = { name, contact, note, timestamp: new Date().toISOString() };
+      
+      // Save locally
+      const existing = JSON.parse(localStorage.getItem("card_leads") || "[]");
+      existing.push(newLead);
+      localStorage.setItem("card_leads", JSON.stringify(existing));
+
+      alert(`Thank you, ${name}! Your details were saved.`);
+      document.getElementById("lead-form").reset();
+      closeModal("exchange-modal");
+    }
+  </script>
+</body>
+</html>
+

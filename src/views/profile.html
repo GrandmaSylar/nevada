@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>{{FULL_NAME}} | {{COMPANY}}</title>
+  <meta name="description" content="{{FULL_NAME}} - {{JOB_TITLE}} at {{COMPANY}}" />
+  <meta name="theme-color" content="#0b0f19" />
+  
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: rgba(22, 29, 47, 0.85);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      --btn-bg: rgba(255, 255, 255, 0.05);
+      --btn-hover: rgba(255, 255, 255, 0.12);
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.12) 0px, transparent 50%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px 40px;
+      color: var(--text-main);
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .badge-bar {
+      display: flex;
+      justify-content: center;
+      min-height: 28px;
+    }
+
+    .pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      background: rgba(59, 130, 246, 0.15);
+      color: #93c5fd;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+      backdrop-filter: blur(8px);
+      animation: fadeIn 0.4s ease-out;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 28px;
+      padding: 28px 20px 24px;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      text-align: center;
+    }
+
+    .avatar-wrapper {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 16px;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid rgba(59, 130, 246, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      background: #1e293b;
+      display: block;
+    }
+
+    .avatar-fallback {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #1e293b, #334155);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: #e2e8f0;
+      border: 3px solid rgba(59, 130, 246, 0.6);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .nfc-icon-chip {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #2563eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+      font-size: 0.85rem;
+      border: 2px solid var(--card-bg);
+    }
+
+    h1 {
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .title {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 500;
+    }
+
+    .company {
+      font-size: 0.85rem;
+      color: #60a5fa;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .bio-text {
+      font-size: 0.88rem;
+      color: #cbd5e1;
+      line-height: 1.45;
+      margin-bottom: 20px;
+      padding: 0 8px;
+    }
+
+    /* Primary Actions */
+    .cta-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .btn-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--accent-gradient);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 14px 20px;
+      border-radius: 16px;
+      font-size: 1rem;
+      font-weight: 600;
+      box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.4);
+      transition: transform 0.15s, opacity 0.15s;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.98);
+      opacity: 0.95;
+    }
+
+    .btn-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--btn-bg);
+      color: var(--text-main);
+      text-decoration: none;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      border: 1px solid var(--card-border);
+      cursor: pointer;
+      transition: background 0.15s;
+      width: 100%;
+    }
+
+    .btn-secondary:active {
+      background: var(--btn-hover);
+    }
+
+    /* Contact Links Section */
+    .section-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .link-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .link-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: var(--btn-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+    }
+
+    .link-row:active {
+      background: var(--btn-hover);
+      transform: scale(0.99);
+    }
+
+    .link-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .link-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .link-right {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Modal Sheet */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      z-index: 100;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal-sheet {
+      background: #161e31;
+      width: 100%;
+      max-width: 440px;
+      border-radius: 28px 28px 0 0;
+      padding: 24px 20px 32px;
+      border-top: 1px solid var(--card-border);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+      animation: slideUp 0.25s ease-out;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-header h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text-muted);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 14px;
+      text-align: left;
+    }
+
+    .form-group label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .form-input {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      color: #fff;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--accent);
+    }
+
+    .qr-preview-box {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 16px auto 8px;
+      width: fit-content;
+    }
+
+    .qr-preview-box img {
+      width: 190px;
+      height: 190px;
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    
+    <!-- Source Attribution Badge -->
+    <div class="badge-bar">
+      <div id="source-badge" class="pill-badge" style="display: none;"></div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card">
+      <div class="avatar-wrapper">
+        <div id="avatar-container">
+          <!-- Populated by JS based on whether avatar_path exists -->
+        </div>
+        <div class="nfc-icon-chip" title="NFC Card Active">⚡</div>
+      </div>
+
+      <h1>{{FULL_NAME}}</h1>
+      <p class="title">{{JOB_TITLE}}</p>
+      <p class="company">{{COMPANY}}</p>
+
+      <div id="bio-container"></div>
+
+      <!-- Primary Action Buttons -->
+      <div class="cta-stack">
+        <a href="/p/{{SLUG}}/vcard" download="{{SLUG}}.vcf" class="btn-primary" id="btn-save-vcf">
+          <span>💾</span>
+          <span>Save to Contacts</span>
+        </a>
+        <button type="button" class="btn-secondary" onclick="openModal('exchange-modal')">
+          <span>🤝</span>
+          <span>Exchange Contact</span>
+        </button>
+      </div>
+
+      <!-- Quick Contact Channels -->
+      <p class="section-label">Direct Connect</p>
+      <div class="link-list" id="links-container">
+        <!-- Dynamically rendered based on staff attributes -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Modal: Exchange Contact (2-Way Lead Capture) -->
+  <div id="exchange-modal" class="modal-overlay" onclick="handleOverlayClick(event, 'exchange-modal')">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <h3>Connect with {{FIRST_NAME}}</h3>
+        <button class="close-btn" onclick="closeModal('exchange-modal')">&times;</button>
+      </div>
+      <form id="lead-form" onsubmit="handleLeadSubmit(event)">
+        <div class="form-group">
+          <label for="lead-name">Your Full Name</label>
+          <input type="text" id="lead-name" class="form-input" placeholder="e.g. Alex Morgan" required />
+        </div>
+        <div class="form-group">
+          <label for="lead-contact">Your Phone or Email</label>
+          <input type="text" id="lead-contact" class="form-input" placeholder="e.g. alex@example.com" required />
+        </div>
+        <div class="form-group">
+          <label for="lead-note">Company or Quick Note</label>
+          <input type="text" id="lead-note" class="form-input" placeholder="e.g. Met at tech summit" />
+        </div>
+        <button type="submit" class="btn-primary" style="margin-top: 8px;" id="lead-submit-btn">
+          Send Details Back
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Show QR Code -->
+  <div id="qr-modal" class="modal-overlay" onclick="handleOverlayClick(event, 'qr-modal')">
+    <div class="modal-sheet" style="text-align: center;">
+      <div class="modal-header">
+        <h3>Card QR Code</h3>
+        <button class="close-btn" onclick="closeModal('qr-modal')">&times;</button>
+      </div>
+      <p style="font-size: 0.88rem; color: var(--text-muted);">
+        Scan with camera if phone does not support NFC
+      </p>
+      <div class="qr-preview-box">
+        <img src="/p/{{SLUG}}/qr.png" alt="Card QR Code" />
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 8px;">
+        High-contrast print ready QR
+      </p>
+    </div>
+  </div>
+
+  <script>
+    const staff = JSON.parse('{{DATA_JSON}}');
+    const slug = '{{SLUG}}';
+
+    document.addEventListener("DOMContentLoaded", () => {
+      // 1. Render Avatar (Photo or Initials Fallback)
+      const avatarBox = document.getElementById("avatar-container");
+      if (staff.avatar_path) {
+        avatarBox.innerHTML = `<img src="${staff.avatar_path}" class="avatar-img" alt="${staff.first_name} ${staff.last_name}" />`;
+      } else {
+        const initials = ((staff.first_name || '')[0] || '') + ((staff.last_name || '')[0] || '');
+        avatarBox.innerHTML = `<div class="avatar-fallback">${initials.toUpperCase() || 'ST'}</div>`;
+      }
+
+      // 2. Render Bio if present
+      if (staff.bio && staff.bio.trim()) {
+        document.getElementById("bio-container").innerHTML = `<p class="bio-text">${escapeHtml(staff.bio)}</p>`;
+      }
+
+      // 3. Render Link List
+      const linksContainer = document.getElementById("links-container");
+      let html = '';
+
+      if (staff.phone) {
+        html += `
+          <a href="tel:${escapeAttr(staff.phone)}" class="link-row">
+            <div class="link-left"><div class="link-icon">📞</div><span>Call Mobile</span></div>
+            <span class="link-right">${escapeHtml(staff.phone)}</span>
+          </a>
+        `;
+      }
+      if (staff.email) {
+        html += `
+          <a href="mailto:${escapeAttr(staff.email)}" class="link-row">
+            <div class="link-left"><div class="link-icon">✉️</div><span>Email</span></div>
+            <span class="link-right">${escapeHtml(staff.email)}</span>
+          </a>
+        `;
+      }
+      if (staff.whatsapp) {
+        const waNum = staff.whatsapp.replace(/[^0-9]/g, '');
+        html += `
+          <a href="https://wa.me/${waNum}" target="_blank" rel="noopener" class="link-row">
+            <div class="link-left"><div class="link-icon">💬</div><span>WhatsApp</span></div>
+            <span class="link-right">Message</span>
+          </a>
+        `;
+      }
+      if (staff.linkedin_url) {
+        html += `
+          <a href="${escapeAttr(staff.linkedin_url)}" target="_blank" rel="noopener" class="link-row">
+            <div class="link-left"><div class="link-icon">💼</div><span>LinkedIn</span></div>
+            <span class="link-right">Connect</span>
+          </a>
+        `;
+      }
+      if (staff.github_url) {
+        html += `
+          <a href="${escapeAttr(staff.github_url)}" target="_blank" rel="noopener" class="link-row">
+            <div class="link-left"><div class="link-icon">🐙</div><span>GitHub</span></div>
+            <span class="link-right">Profile</span>
+          </a>
+        `;
+      }
+      if (staff.website_url) {
+        html += `
+          <a href="${escapeAttr(staff.website_url)}" target="_blank" rel="noopener" class="link-row">
+            <div class="link-left"><div class="link-icon">🌐</div><span>Website</span></div>
+            <span class="link-right">Visit</span>
+          </a>
+        `;
+      }
+
+      // Always include QR modal button
+      html += `
+        <button type="button" class="link-row" onclick="openModal('qr-modal')" style="width: 100%; cursor: pointer;">
+          <div class="link-left"><div class="link-icon">📷</div><span>Show My QR Code</span></div>
+          <span class="link-right">Display</span>
+        </button>
+      `;
+
+      linksContainer.innerHTML = html;
+
+      // 4. Attribution Detection
+      const urlParams = new URLSearchParams(window.location.search);
+      const src = urlParams.get("src");
+      const badge = document.getElementById("source-badge");
+      if (src === "nfc") {
+        badge.innerHTML = "⚡ Connected via NFC Card Tap";
+        badge.style.display = "inline-flex";
+      } else if (src === "qr") {
+        badge.innerHTML = "📷 Connected via QR Code Scan";
+        badge.style.display = "inline-flex";
+      }
+    });
+
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>'"]/g, tag => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+      }[tag] || tag));
+    }
+
+    function escapeAttr(str) {
+      return String(str).replace(/"/g, '&quot;');
+    }
+
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "flex";
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.style.display = "none";
+    }
+
+    function handleOverlayClick(event, id) {
+      if (event.target.id === id) closeModal(id);
+    }
+
+    async function handleLeadSubmit(e) {
+      e.preventDefault();
+      const submitBtn = document.getElementById("lead-submit-btn");
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Sending...";
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const source = urlParams.get("src") || "direct";
+
+      const payload = {
+        visitor_name: document.getElementById("lead-name").value,
+        visitor_contact: document.getElementById("lead-contact").value,
+        visitor_note: document.getElementById("lead-note").value,
+        source
+      };
+
+      try {
+        const res = await fetch(`/p/${slug}/exchange`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`Thank you, ${payload.visitor_name}! Your contact was shared successfully.`);
+          document.getElementById("lead-form").reset();
+          closeModal("exchange-modal");
+        } else {
+          alert(data.error || "Failed to submit. Please try again.");
+        }
+      } catch (err) {
+        alert("Network error submitting details.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Send Details Back";
+      }
+    }
+  </script>
+</body>
+</html>
+

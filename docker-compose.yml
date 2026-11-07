@@ -1,0 +1,27 @@
+services:
+  app:
+    build: .
+    container_name: nevada_cards_app
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    # Allows container to connect to MSSQL running on the host server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - PORT=3000
+      - DB_SERVER=host.docker.internal
+      - DB_PORT=1433
+      - DB_DATABASE=nevada_cards
+      - DB_USER=sa
+      - DB_PASSWORD=${DB_PASSWORD:-YourStrong@Password}
+      - DB_TRUST_SERVER_CERTIFICATE=true
+      - ADMIN_EMAIL=admin@example.com
+      - ADMIN_PASSWORD=admin123
+    volumes:
+      - app_uploads:/app/public/uploads
+      - app_data:/app/data
+
+volumes:
+  app_uploads:
+  app_data:

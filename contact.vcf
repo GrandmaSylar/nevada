@@ -1,0 +1,14 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Doe;John;;;
+FN:John Doe
+ORG:Nevada Tech;
+TITLE:Founder & Developer
+TEL;TYPE=CELL,VOICE:+15551234567
+EMAIL;TYPE=WORK,INTERNET:john@example.com
+URL;TYPE=WORK:https://grandmasylar.github.io/nevada/
+X-SOCIALPROFILE;TYPE=github:https://github.com/GrandmaSylar
+X-SOCIALPROFILE;TYPE=linkedin:https://linkedin.com/
+NOTE:Connected via Nevada Digital NFC Card
+END:VCARD
+
